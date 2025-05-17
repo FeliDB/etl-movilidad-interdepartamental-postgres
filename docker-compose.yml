@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Servicio PostgreSQL
   postgres:
     image: postgres:15
     container_name: postgres-db
@@ -16,7 +15,6 @@ services:
       - ./datos:/datos
       - ./init:/docker-entrypoint-initdb.d
 
-  # Servicio pgAdmin
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -29,9 +27,10 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
-  # Servicio Apache Superset
   superset:
-    image: apache/superset
+    build:
+      context: ./superset
+      dockerfile: Dockerfile
     container_name: superset
     restart: unless-stopped
     environment:
