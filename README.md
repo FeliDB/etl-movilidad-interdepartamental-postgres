@@ -60,7 +60,7 @@ git clone https://github.com/FeliDB/etl-movilidad-interdepartamental-postgres
 
 Para cambiar al directorio raiz del proyecto:
 ```
-git clone https://github.com/FeliDB/etl-movilidad-interdepartamental-postgres
+cd etl-movilidad-interdepartamental-postgres
 ```
 
 ### Estructura del proyecto
