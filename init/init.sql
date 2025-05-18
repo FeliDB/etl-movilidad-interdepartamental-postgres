@@ -117,9 +117,8 @@ COPY movilidadinterdepartamental_tmp(
 )
 FROM '/datos/movilidadinterdepartamental.csv' DELIMITER ',' CSV HEADER;
 
--- ================================================
--- INSERCIÓN DE DATOS VÁLIDOS EN TABLA DEFINITIVA
--- ================================================
+
+
 
 INSERT INTO movilidadinterdepartamental (
     provincia_origen_id,
@@ -139,16 +138,3 @@ WHERE
     provincia_destino_id IN (SELECT id FROM provincia) AND
     departamento_origen_id IN (SELECT id FROM departamento) AND
     departamento_destino_id IN (SELECT id FROM departamento);
-
--- ================================================
--- (OPCIONAL) REVISAR FILAS INVÁLIDAS
--- ================================================
--- Puedes usar esta consulta para ver qué registros fueron ignorados
-
--- SELECT *
--- FROM movilidadinterdepartamental_tmp
--- WHERE 
---     provincia_origen_id NOT IN (SELECT id FROM provincia) OR
---     provincia_destino_id NOT IN (SELECT id FROM provincia) OR
---     departamento_origen_id NOT IN (SELECT id FROM departamento) OR
---     departamento_destino_id NOT IN (SELECT id FROM departamento);

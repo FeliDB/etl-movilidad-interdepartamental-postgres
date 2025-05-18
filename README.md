@@ -125,6 +125,44 @@ Este archivo contiene la definicion de los servicios que se crearán dentro del 
 + __pgAdmin__ (interfaz grafica para PostgreSQL)
 + __superSet__ (realizar consultas a la base de datos)
 
+### Docker Compose: PostgreSQL + pgAdmin + Apache Superset
+
+Este entorno de desarrollo levanta una base de datos PostgreSQL, una interfaz gráfica (__pgAdmin__) y una herramienta de visualización de datos (__superSet__), todo dentro de contenedores Docker.
+
+### Servicios
+
+### 🐘 PostgreSQL
+- Imagen: `postgres:15`
+- Puerto: `5432`
+- Variables de entorno:
+  - `POSTGRES_USER`: `postgres`
+  - `POSTGRES_PASSWORD`: `postgres`
+  - `POSTGRES_DB`: `movilidad`
+- Volúmenes:
+  - `./datos`: para persistencia de datos.
+  - `./init`: para scripts SQL de inicialización.
+
+### 🖥️ pgAdmin 4
+- Imagen: `dpage/pgadmin4`
+- Puerto: `8080`
+- Acceso: `http://localhost:8080`
+- Usuario por defecto:
+  - Email: `admin@admin.com`
+  - Contraseña: `admin`
+- Volumen persistente: `pgadmin-data`
+
+### 📊 Apache Superset
+- Build: desde `./superset/Dockerfile`
+- Puerto: `8088`
+- Acceso: `http://localhost:8088`
+- Usuario admin por defecto:
+  - `admin / admin`
+- Volumen persistente: `superset-data`
+- Comandos al iniciar:
+  - Migración de base de datos
+  - Creación del admin
+  - Inicialización de Superset
+
 
 
 
@@ -215,3 +253,62 @@ postgresql+psycopg2://postgres:postgres@postgres:5432/movilidad
 ```
 
 Una vez ingresado, ¡Listo! Ya podremos comenzar a realizar las consultas en nuestra base de datos
+
+
+# 3. Definición de las Query de Consultas
+
+
+Una vez hemos levantado el proyecto y entrado a __pgAdmin__ y __superSet__, vamos a proceder a realizar las consultas solicitadas:
+
+
+## Consulta 1
+
+_Obtener los 10 principales flujos migratorios interdepartamentales ordenados por cantidad de migrantes, incluyendo nombres completos de las provincias y departamentos de origen y destino._
+
+
+Para esto, vamos al __superSet__ e ingresamos lo siguiente:
+
+```
+SELECT 
+    p_origen.nombre_completo AS provincia_origen,
+    d_origen.nombre_completo AS departamento_origen,
+    p_destino.nombre_completo AS provincia_destino,
+    d_destino.nombre_completo AS departamento_destino,
+    m.migrantes
+FROM movilidadinterdepartamental m
+JOIN provincia p_origen ON m.provincia_origen_id = p_origen.id
+JOIN provincia p_destino ON m.provincia_destino_id = p_destino.id
+JOIN departamento d_origen ON m.departamento_origen_id = d_origen.id
+JOIN departamento d_destino ON m.departamento_destino_id = d_destino.id
+ORDER BY m.migrantes DESC
+LIMIT 10;
+
+```
+
+
+## Consulta 2
+
+_Listar la cantidad total de migrantes que llegaron a cada provincia, agrupados por nombre de la provincia destino, incluyendo la cantidad de departamentos involucrados como destino._
+
+
+Para esto, vamos al __superSet__ e ingresamos lo siguiente:
+
+```
+SELECT 
+    p.nombre_completo AS provincia_destino,
+    COUNT(DISTINCT d.id) AS cantidad_departamentos_destino,
+    SUM(m.migrantes) AS total_migrantes_recibidos
+FROM movilidadinterdepartamental m
+JOIN provincia p ON m.provincia_destino_id = p.id
+JOIN departamento d ON m.departamento_destino_id = d.id
+GROUP BY p.nombre_completo
+ORDER BY total_migrantes_recibidos DESC;
+```
+
+
+## Extra: Creación de Gráficos y Tableros**
+
+1. Ejecuta las consultas en ***`SQL Lab`*** de __superSet__
+2. Haz clic en el botón ***`CREATE CHART`*** para crear gráficos interactivos.
+3. Configura el tipo de gráfico y las dimensiones necesarias.
+4. Guarda el gráfico en un tablero con el botón ***`SAVE`***.
