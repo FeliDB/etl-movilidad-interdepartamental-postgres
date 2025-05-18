@@ -1,6 +1,19 @@
 
 # Manipulacion ETL de Movilidad residencial interdepartamental en Argentina (Decenio 2012 - 2022)
 
+## Integrantes del GRUPO N°1
+
+Nombre | Legajo |
+--- | --- |
+Felipe Diaz Bertero | 15326
+Agustin Castillo | 15470
+Elisa Nardi | 16136
+Federico Villoria | 13906
+Milagros Oliva | 14952
+Nahuel Fruttero | 13424
+Fernando Monti | 10289
+Nazareno Fabiani | 14934
+
 ## Resumen
 
 En este tutorial vamos a ver cómo configurar una base de datos en __*PostgreSQL*__ para importar y trabajar con datos reales de **Movilidad Residencial Interdepartamental** en Argentina, específicamente del periodo 2012-2022. El archivo que vamos a usar es un archivo CSV que contiene información sobre los movimientos de personas entre distintos departamentos del país.
